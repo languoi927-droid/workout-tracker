@@ -1,0 +1,704 @@
+/* 1. THE BODY PART SECTION */
+.body-part-section {
+  margin-bottom: 24px;
+}
+
+.body-part-section h3 {
+  margin-left: 20px;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+/* 2. THE HORIZONTAL SCROLL WRAPPER */
+.horizontal-scroll-container {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important; /* Forces side-by-side */
+  overflow-x: auto;
+  gap: 12px;
+  padding: 10px 20px;
+  scroll-snap-type: x mandatory;
+}
+
+/* Hide scrollbars for a clean "App" look */
+.horizontal-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* 3. THE UPDATED CARD */
+.exercise-card {
+  flex: 0 0 85%; /* Shows 85% of card width */
+  scroll-snap-align: center;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-top: 8px solid #ddd; /* Moved to top for better horizontal look */
+  display: flex;
+  flex-direction: column;
+  min-height: 320px; /* Ensures all cards are same height */
+  transition: all 0.3s ease;
+}
+
+/* Status Colors */
+.exercise-card.status-completed { 
+  border-top-color: #2ecc71; 
+  background: #fafffb; 
+}
+.exercise-card.status-edited { 
+  border-top-color: #e74c3c; 
+  background: #fffaf9; 
+}
+
+/* 4. COMPACT ROWS & STEPPERS */
+.compact-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.mini-stepper {
+  display: flex;
+  align-items: center;
+  background: #f0f2f5;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.mini-stepper button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.mini-stepper button:active {
+  background: #e2e4e7;
+  border-radius: 6px;
+}
+
+.mini-stepper span {
+  width: 50px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.mini-stepper small {
+  font-size: 0.7rem;
+  color: #666;
+  margin-left: 2px;
+}
+
+/* 5. FINISH BUTTON */
+.finish-card-btn {
+  margin-top: auto; /* Pushes button to bottom of card */
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: #1a1a1a;
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.status-completed .finish-card-btn {
+  background: #2ecc71;
+}
+
+/* Checkbox Style */
+.mobile-checkbox {
+  width: 24px;
+  height: 24px;
+  accent-color: #2ecc71;
+}
+.picker-container {
+  padding-bottom: 40px;
+}
+
+.picker-title {
+  margin-left: 20px;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.body-part-label {
+  margin-left: 20px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Picker Specific Card */
+.picker-card {
+  flex: 0 0 160px; /* Much narrower than the workout cards */
+  scroll-snap-align: start;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  min-height: 140px;
+}
+
+.picker-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.picker-stats {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.picker-add-btn {
+  margin-top: 12px;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #4f46e5; /* Indigo color */
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.picker-add-btn:active {
+  transform: scale(0.95); /* Visual click feedback */
+  background: #4338ca;
+}
+/* Container for each body part row */
+.body-part-group {
+  margin-bottom: 20px;
+}
+
+.body-part-header {
+  margin-left: 16px;
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 700;
+}
+
+/* Ensure the exercise cards have the right flex properties */
+.exercise-card {
+  flex: 0 0 85%; /* This prevents the card from shrinking */
+  scroll-snap-align: center; /* This snaps it to the middle when swiping */
+  /* ... keep your other styles (border-left, background, etc) ... */
+}
+.library-container {
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: 100vh;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.add-main-btn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+/* Section Styling */
+.section-title {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #888;
+  margin: 20px 0 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+/* Grid Layout */
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 15px;
+}
+ .library-list-stack {
+  display: flex !important;
+  flex-direction: column !important; /* Forces top-to-bottom */
+  gap: 12px;
+  width: 100%;
+}
+
+/* Professional Card Look */
+.lib-card {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border: 1px solid #efefef;
+  transition: transform 0.2s;
+}
+
+.lib-card:active {
+  transform: scale(0.97);
+}
+
+.lib-card-info strong {
+  display: block;
+  font-size: 1rem;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+}
+
+.lib-card-info span {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.lib-card-info small {
+  color: #4f46e5;
+  font-weight: bold;
+}
+
+/* Buttons inside card */
+.lib-card-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 10px;
+}
+
+.lib-card-actions button {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.lib-card-actions .del-text {
+  color: #e74c3c;
+}
+
+/* Form Overlay (Mobile Friendly) */
+.form-overlay {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  border: 2px solid #4f46e5;
+}
+/* --- LIBRARY SPECIFIC (VERTICAL) --- */
+.library-container {
+  padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* This forces the exercises to stack on top of each other */
+.library-list-stack {
+  display: flex;
+  flex-direction: column; /* This is what makes it vertical */
+  gap: 12px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.lib-list-item {
+  display: flex;
+  
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  width: 100%; /* Ensures it takes the full width of the container */
+  box-sizing: border-box;
+}
+
+.lib-item-info strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #1a1a1a;
+}
+
+.lib-item-meta {
+  display: flex;
+  gap: 8px;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}z  
+
+.lib-item-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.lib-item-actions button {
+  background: #f0f0f2;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+/* THE BOTTOM-SHEET FORM */
+.form-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 24px 20px 40px 20px; /* Extra bottom padding for home indicator */
+  border-radius: 24px 24px 0 0; /* Rounded top corners only */
+  box-shadow: 0 -10px 25px rgba(0,0,0,0.15);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+  border: none; /* Removed the indigo border for a cleaner look */
+}
+
+/* The "Handle" at the top of the sheet to show it's draggable */
+.form-overlay::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 5px;
+  background: #ddd;
+  border-radius: 10px;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* Background Dimmer (optional but recommended) */
+.form-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+/* Form Elements Spacing */
+.form-overlay input, 
+.form-overlay select {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #f9f9f9;
+  font-size: 16px; /* Prevents iOS auto-zoom on focus */
+  box-sizing: border-box;
+}
+.field-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .field-group {
+  flex: 1; /* Makes both inputs equal width */
+}
+
+/* Ensure labels inside form look consistent */
+.exercise-form label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 6px;
+  margin-left: 4px;
+}
+/* THE SAVE BUTTON (Primary Action) */
+.save-btn {
+  width: 100%;
+  height: 56px; /* Thick for mobile "Fat Thumb" rule */
+  background: #4f46e5; /* Indigo */
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+
+.save-btn:active {
+  transform: scale(0.97); /* "Squisy" tactile feel when pressed */
+  background: #4338ca;
+}
+
+/* THE CANCEL BUTTON (Secondary Action) */
+.cancel-btn {
+  width: 100%;
+  height: 50px;
+  background: transparent;
+  color: #666;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cancel-btn:active {
+  color: #1a1a1a;
+  background: #f5f5f7; /* Light highlight on press */
+  border-radius: 12px;
+}
+/* CATEGORY GRID */
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.category-tile {
+  background: white;
+  border: 1px solid #eee;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.category-tile:active {
+  transform: scale(0.95);
+  background: #f0f0f7;
+}
+
+.cat-icon { font-size: 2rem; }
+.cat-name { font-weight: 700; color: #1a1a1a; }
+.cat-count { 
+  font-size: 0.75rem; 
+  background: #4f46e5; 
+  color: white; 
+  padding: 2px 8px; 
+  border-radius: 10px; 
+}
+
+/* POPUP SPECIFIC TWEAKS */
+.category-popup {
+  max-height: 80vh; /* Don't cover full screen */
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-popup {
+  background: #f0f0f2;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+.scrollable-list {
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #999;
+  padding: 40px 0;
+}
+/* Inline Add Button for the Picker Popup */
+.picker-inline-add-btn {
+  background: #4f46e5 !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  border: none;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+}
+
+.picker-inline-add-btn:active {
+  transform: scale(0.92);
+}
+
+/* Make sure the list item in picker looks distinct */
+.picker-item {
+  border-left: 4px solid #4f46e5;
+  margin-bottom: 8px;
+}
+
+/* Ensure the scrollable list doesn't get cut off by the bottom sheet curve */
+.scrollable-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 4px; /* Space for scrollbar if visible */
+}
+.header-meta {
+  padding: 20px;
+  background: white;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-meta span {
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: #1a1a1a;
+}
+
+.header-meta small {
+  color: #4f46e5;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+/* Container to handle the whole screen */
+.app-viewport {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Content area needs to scroll independently */
+.content-container {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px; /* Space for the tab bar */
+}
+
+/* THE TAB BAR */
+.bottom-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px); /* iPhone-style blur */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-bottom: env(safe-area-inset-bottom); /* Fix for iPhone Notch/Home bar */
+  z-index: 2000;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tab-icon {
+  font-size: 1.4rem;
+  margin-bottom: 2px;
+}
+
+.tab-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Active State */
+.tab-item.active {
+  color: #4f46e5; /* Your Indigo color */
+}
+
+.tab-item.active .tab-icon {
+  transform: scale(1.1);
+}
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  padding: 40px;
+  text-align: center;
+  background: #f4f4f9;
+}
+
+.login-screen input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  text-align: center;
+}
+.logout-btn {
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
