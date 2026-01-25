@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dataconnect/generated": "file:src/dataconnect-generated",
     "chart.js": "^4.5.1",
     "firebase": "^12.8.0",
     "react": "^19.2.0",
