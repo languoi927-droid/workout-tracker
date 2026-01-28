@@ -1,6 +1,6 @@
 import { useSessionExercises } from "../hooks/useSessionExercises";
 import ExerciseInSession from "./ExerciseInSession";
-
+import { finishSession } from "../lib/sessionService";
 // Added userCode to props
 export default function ActiveSession({ sessionId, userCode }) {
   
@@ -13,7 +13,24 @@ export default function ActiveSession({ sessionId, userCode }) {
     acc[part].push(ex);
     return acc;
   }, {});
-
+  // Calculate totals for the day
+  const stats = exercises.reduce((acc, ex) => {
+    ex.sets.forEach(s => {
+      if (s.done) {
+        acc.weight += (s.weight * s.reps);
+        acc.sets += 1;
+      }
+    });
+    return acc;
+  }, { weight: 0, sets: 0 });
+  const handleFinish = async () => {
+    if (exercises.length === 0) return;
+    if (window.confirm("Finish workout and save to history?")) {
+      await finishSession(userCode, sessionId, stats);
+      alert("Workout saved!");
+      // Optionally redirect to Progress Tab
+    }
+  };
   return (
     <div className="active-session-page">
       <h2 className="session-title">Current Workout</h2>
@@ -40,6 +57,24 @@ export default function ActiveSession({ sessionId, userCode }) {
           </div>
         </div>
       ))}
+      {exercises.length > 0 && (
+        <div className="session-summary-card">
+          <h3>Workout Summary</h3>
+          <div className="stats-row">
+            <div className="stat">
+              <label>Volume</label>
+              <p>{stats.weight} <small>kg</small></p>
+            </div>
+            <div className="stat">
+              <label>Sets</label>
+              <p>{stats.sets}</p>
+            </div>
+          </div>
+          <button className="finish-session-btn" onClick={handleFinish}>
+            🏁 Finish Workout
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import ExercisePicker from "./components/ExercisePicker";
 import ActiveSession from "./components/ActiveSession";
 import ExerciseLibrary from "./components/ExerciseLibrary";
 import Login from "./components/Login";
+import ProgressTab from "./components/ProgressTab";
 import { getOrCreateTodaySession } from "./lib/sessionService";
 
 export default function App() {
@@ -64,12 +65,14 @@ export default function App() {
               </>
             )}
           </div>
-        ) : (
+        ) : activeTab === "library" ?(
           <div className="tab-content">
             {/* 3. Pass userCode to the Library */}
             <ExerciseLibrary userCode={userCode} />
           </div>
-        )}
+        ):(
+  <ProgressTab userCode={userCode} />
+)}
       </main>
 
       <nav className="bottom-tab-bar">
@@ -88,6 +91,14 @@ export default function App() {
           <span className="tab-icon">📚</span>
           <span className="tab-label">Library</span>
         </button>
+        <button 
+  className={`tab-item ${activeTab === "progress" ? "active" : ""}`}
+  onClick={() => setActiveTab("progress")}
+>
+  <span className="tab-icon">📈</span>
+  <span className="tab-label">Progress</span>
+</button>
+        
       </nav>
     </div>
   );

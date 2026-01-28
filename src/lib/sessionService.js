@@ -13,3 +13,16 @@ export async function getOrCreateTodaySession(userCode) {
   await setDoc(sessionRef, newSession);
   return { id: today, ...newSession };
 }
+
+
+export async function finishSession(userCode, sessionId, totalStats) {
+  const sessionRef = doc(db, "users", userCode.toLowerCase().trim(), "workoutSessions", sessionId);
+  
+  return await updateDoc(sessionRef, {
+    completed: true,
+    completedAt: new Date(),
+    totalWeight: totalStats.weight,
+    totalSets: totalStats.sets,
+    // You can also save a "Mood" or "Notes" here later
+  });
+}
