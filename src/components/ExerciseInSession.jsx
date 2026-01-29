@@ -53,13 +53,25 @@ export default function ExerciseInSession({ exercise, sessionId, userCode }) {
     });
   };
 
-  const handleUpdate = (index, field, delta) => {
-    const sets = exercise.sets.map((s, i) =>
-      i === index ? { ...s, [field]: Math.max(0, s[field] + delta) } : s
-    );
-    safeUpdate({ sets, edited: true, completed: false });
-  };
+ const handleUpdate = (index, field, delta) => {
+  const sets = exercise.sets.map((s, i) => {
+    if (i === index) {
+      // Use parseFloat and toFixed to keep weights clean (e.g., 2.5, 5, 7.5)
+      const newValue = Math.max(0, Number(s[field]) + delta);
+      return { ...s, [field]: parseFloat(newValue.toFixed(2)) };
+    }
+    return s;
+  });
+  safeUpdate({ sets, edited: true, completed: false });
+};
 
+const syncRemainingSets = (index) => {
+  const sourceSet = exercise.sets[index];
+  const updatedSets = exercise.sets.map((s, i) => 
+    i > index ? { ...s, weight: sourceSet.weight, reps: sourceSet.reps } : s
+  );
+  safeUpdate({ sets: updatedSets, edited: true });
+};
   const cardStatus = exercise.completed ? "status-completed" : exercise.edited ? "status-edited" : "";
 
   return (
@@ -94,10 +106,20 @@ export default function ExerciseInSession({ exercise, sessionId, userCode }) {
             </div>
 
             <div className="mini-stepper">
-              <button onClick={() => handleUpdate(i, "weight", -2.5)}>-</button>
+              <button onClick={() => handleUpdate(i, "weight", -0.5)}>-</button>
               <span>{s.weight}<small>kg</small></span>
-              <button onClick={() => handleUpdate(i, "weight", 2.5)}>+</button>
+              <button onClick={() => handleUpdate(i, "weight", 0.5)}>+</button>
             </div>
+            {i < exercise.sets.length - 1 && (
+      <button 
+        type="button"
+        className="sync-btn" 
+        onClick={() => syncRemainingSets(i)}
+        title="Copy to all sets below"
+      >
+        ▼
+      </button>
+    )}
           </div>
         ))}
       </div>

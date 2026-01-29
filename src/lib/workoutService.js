@@ -3,32 +3,34 @@ import {
   collection,
   addDoc,
   getDocs,
+  doc,
+  updateDoc,
+  deleteDoc,
   query,
   orderBy,
   serverTimestamp
 } from "firebase/firestore";
 
-// Helper to get the correct user-specific collection path
+// Helper for path consistency
 const getUserTemplateCol = (userCode) => 
   collection(db, "users", userCode.toLowerCase().trim(), "exerciseTemplates");
 
-// 🔹 Add exercise template (Private to User)
-export async function addExercise(userCode, name, bodyPart, defaultSets = []) {
+// 🔹 Add exercise template
+export async function addExerciseTemplate(userCode, data) {
+  // data should be { name, bodyPart, sets: [...] }
   return await addDoc(getUserTemplateCol(userCode), {
-    name,
-    bodyPart,
-    defaultSets,
+    ...data,
     createdAt: serverTimestamp()
   });
 }
 
-// 🔹 Get all exercise templates (Private to User)
-export async function getExercises(userCode) {
+// 🔹 Get all templates
+export async function getExerciseTemplates(userCode) {
   if (!userCode) return [];
   
   const q = query(
     getUserTemplateCol(userCode), 
-    orderBy("bodyPart")
+    orderBy("name") // Sorting by name is usually better for a library list
   );
   
   const snap = await getDocs(q);
@@ -36,4 +38,19 @@ export async function getExercises(userCode) {
     id: d.id, 
     ...d.data() 
   }));
+}
+
+// 🔹 Update an existing template
+export async function updateExerciseTemplate(userCode, templateId, data) {
+  const ref = doc(db, "users", userCode.toLowerCase().trim(), "exerciseTemplates", templateId);
+  return await updateDoc(ref, {
+    ...data,
+    lastUpdated: serverTimestamp()
+  });
+}
+
+// 🔹 Delete a template
+export async function deleteExerciseTemplate(userCode, templateId) {
+  const ref = doc(db, "users", userCode.toLowerCase().trim(), "exerciseTemplates", templateId);
+  return await deleteDoc(ref);
 }

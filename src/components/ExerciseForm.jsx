@@ -4,23 +4,52 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState({
     name: "",
     bodyPart: "Chest",
-    sets: 3,
-    reps: 10,
-    weight: 0,
+    sets: [] // Now an array of { reps, weight }
   });
 
+  // Helper to generate a default set array
+  const createDefaultSets = (count, reps = 10, weight = 0) => 
+    Array.from({ length: count }, () => ({ reps, weight, done: false }));
+
   useEffect(() => {
-    if (initial) setForm(initial);
+    if (initial) {
+      setForm(initial);
+    } else {
+      // Default state for new exercise: 4 sets
+      setForm(prev => ({ ...prev, sets: createDefaultSets(4) }));
+    }
   }, [initial]);
 
-  const handleChange = (e) => {
-    // Convert numbers correctly if they are numeric inputs
-    const value = e.target.type === 'number' ? Number(e.target.value) : e.target.value;
-    setForm({ ...form, [e.target.name]: value });
+  const handleNameChange = (e) => setForm({ ...form, name: e.target.value });
+  const handleBodyPartChange = (e) => setForm({ ...form, bodyPart: e.target.value });
+
+  // When user changes the "Set Count" number input
+  const handleSetCountChange = (newCount) => {
+    const count = Math.max(1, Number(newCount));
+    let updatedSets = [...form.sets];
+
+    if (count > updatedSets.length) {
+      // Add more sets (copying values from the last set)
+      const lastSet = updatedSets[updatedSets.length - 1] || { reps: 10, weight: 0 };
+      const extra = Array.from({ length: count - updatedSets.length }, () => ({ ...lastSet, done: false }));
+      updatedSets = [...updatedSets, ...extra];
+    } else {
+      // Remove sets from the end
+      updatedSets = updatedSets.slice(0, count);
+    }
+    setForm({ ...form, sets: updatedSets });
+  };
+
+  // Update a specific set's reps or weight
+  const handleIndividualSetChange = (index, field, value) => {
+    const updatedSets = form.sets.map((s, i) => 
+      i === index ? { ...s, [field]: Number(value) } : s
+    );
+    setForm({ ...form, sets: updatedSets });
   };
 
   const submit = (e) => {
-    e.preventDefault(); // Prevent accidental page reloads
+    e.preventDefault();
     if (!form.name) return alert("Please enter an exercise name");
     onSave(form);
   };
@@ -29,72 +58,53 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
     <form className="exercise-form" onSubmit={submit}>
       <div className="field-group">
         <label>Exercise Name</label>
-        <input
-          name="name"
-          placeholder="e.g. Incline Bench Press"
-          value={form.name}
-          onChange={handleChange}
-          autoFocus
-        />
+        <input name="name" value={form.name} onChange={handleNameChange} autoFocus />
       </div>
 
-      <div className="field-group">
-        <label>Category</label>
-        <select name="bodyPart" value={form.bodyPart} onChange={handleChange}>
-          <option>Chest</option>
-          <option>Back</option>
-          <option>Legs</option>
-          <option>Shoulders</option>
-          <option>Arms</option>
-          <option>Abs</option>
-          <option>Cardio</option>
-        </select>
-      </div>
-
-      {/* Row for Sets and Reps */}
       <div className="form-row">
         <div className="field-group">
-          <label>Sets</label>
-          <input
-            name="sets"
-            type="number"
-            inputMode="numeric"
-            value={form.sets}
-            onChange={handleChange}
-          />
+          <label>Category</label>
+          <select value={form.bodyPart} onChange={handleBodyPartChange}>
+            <option>Chest</option><option>Back</option><option>Legs</option>
+            <option>Shoulders</option><option>Arms</option><option>Abs</option>
+          </select>
         </div>
         <div className="field-group">
-          <label>Reps</label>
-          <input
-            name="reps"
-            type="number"
-            inputMode="numeric"
-            value={form.reps}
-            onChange={handleChange}
+          <label>Number of Sets</label>
+          <input 
+            type="number" 
+            value={form.sets.length} 
+            onChange={(e) => handleSetCountChange(e.target.value)} 
           />
         </div>
       </div>
 
-      <div className="field-group">
-        <label>Weight (kg)</label>
-        <input
-          name="weight"
-          type="number"
-          inputMode="decimal"
-          value={form.weight}
-          onChange={handleChange}
-        />
+      <div className="sets-editor-zone">
+        <label>Customize Sets (Optional)</label>
+        {form.sets.map((set, i) => (
+          <div key={i} className="set-edit-row">
+            <span>Set {i + 1}</span>
+            <input 
+              type="number" 
+              placeholder="Reps" 
+              value={set.reps} 
+              onChange={(e) => handleIndividualSetChange(i, "reps", e.target.value)} 
+            />
+            <input 
+              type="number" 
+              placeholder="kg" 
+              value={set.weight} 
+              onChange={(e) => handleIndividualSetChange(i, "weight", e.target.value)} 
+            />
+          </div>
+        ))}
       </div>
 
       <div className="form-actions">
         <button type="submit" className="save-btn">
-          {initial ? "Update Exercise" : "Save Exercise"}
+          {initial ? "Update Template" : "Add to Library"}
         </button>
-        {onCancel && (
-          <button type="button" className="cancel-btn" onClick={onCancel}>
-            Cancel
-          </button>
-        )}
+        {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
       </div>
     </form>
   );

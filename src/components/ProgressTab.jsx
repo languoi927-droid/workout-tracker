@@ -18,22 +18,23 @@ export default function ProgressTab({ userCode }) {
 
   // 🔹 UseMemo to calculate totals without re-running on every render
   const totals = useMemo(() => {
-    const filtered = selectedExercise === "All" ? history : history.filter(h => h.name === selectedExercise);
-    
-    let totalKg = 0;
-    let maxWeight = 0;
-    
-    filtered.forEach(ex => {
-      ex.sets.forEach(s => {
-        if (s.done) {
-          totalKg += (s.weight * s.reps);
-          if (s.weight > maxWeight) maxWeight = s.weight;
-        }
-      });
+  const filtered = selectedExercise === "All" ? history : history.filter(h => h.name === selectedExercise);
+  
+  let totalKg = 0;
+  let topStrength = 0; // Highest Est. 1RM
+  
+  filtered.forEach(ex => {
+    ex.sets.forEach(s => {
+      if (s.done) {
+        totalKg += (s.weight * s.reps);
+        const est1RM = s.weight * (1 + s.reps / 30);
+        if (est1RM > topStrength) topStrength = est1RM;
+      }
     });
+  });
 
-    return { totalKg, maxWeight, count: filtered.length };
-  }, [history, selectedExercise]);
+  return { totalKg, topStrength: Math.round(topStrength), count: filtered.length };
+}, [history, selectedExercise]);
 
   const exerciseNames = ["All", ...new Set(history.map(h => h.name))];
   const filteredHistory = selectedExercise === "All" 

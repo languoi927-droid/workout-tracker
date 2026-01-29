@@ -4,12 +4,13 @@ import { getExerciseTemplates } from "../lib/exerciseService";
 import { addExerciseToSession } from "../lib/sessionExerciseService";
 
 // Change: Receive userCode as a prop
+// ... (keep your existing imports)
+
 export default function ExercisePicker({ sessionId, userCode }) {
   const [exercises, setExercises] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
 
   useEffect(() => {
-    // Change: Fetch the library SPECIFIC to this userCode
     if (userCode) {
       getExerciseTemplates(userCode).then(data => setExercises(data));
     }
@@ -18,8 +19,17 @@ export default function ExercisePicker({ sessionId, userCode }) {
   const bodyParts = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Abs", "Cardio"];
 
   const handleAdd = async (exercise) => {
-    // Change: Pass userCode so it saves in the correct user folder
-    await addExerciseToSession(userCode, sessionId, exercise);
+    // 🔹 ENHANCEMENT: Clean the data before sending to session
+    // We want to make sure 'done' is false for all sets when starting fresh
+    const sessionExerciseData = {
+      ...exercise,
+      sets: exercise.sets.map(s => ({ ...s, done: false })),
+      completed: false,
+      edited: false,
+      addedAt: new Date()
+    };
+
+    await addExerciseToSession(userCode, sessionId, sessionExerciseData);
     setActiveCategory(null);
   };
 
@@ -31,11 +41,7 @@ export default function ExercisePicker({ sessionId, userCode }) {
         {bodyParts.map(bp => {
           const count = exercises.filter(e => e.bodyPart === bp).length;
           return (
-            <button 
-              key={bp} 
-              className="category-tile" 
-              onClick={() => setActiveCategory(bp)}
-            >
+            <button key={bp} className="category-tile" onClick={() => setActiveCategory(bp)}>
               <span className="cat-icon">{getIcon(bp)}</span>
               <span className="cat-name">{bp}</span>
               <span className="cat-count">{count}</span>
@@ -59,13 +65,22 @@ export default function ExercisePicker({ sessionId, userCode }) {
                 .map(e => (
                   <div key={e.id} className="lib-list-item picker-item">
                     <div className="lib-item-info">
-                      <strong>{e.name}</strong>
-                      <div className="lib-item-meta">
-                        <span>{e.sets} sets</span>
-                        <span className="dot">•</span>
-                        <span>{e.weight}kg</span>
-                      </div>
-                    </div>
+  <strong>{e.name}</strong>
+  <div className="lib-item-meta">
+    {/* 🔹 Detailed Preview Logic */}
+    <div className="sets-preview-pills">
+      {e.sets && e.sets.length > 0 ? (
+        e.sets.map((s, idx) => (
+          <span key={idx} className="mini-set-tag">
+            {s.weight}k<small>x</small>{s.reps}
+          </span>
+        ))
+      ) : (
+        <span>No sets defined</span>
+      )}
+    </div>
+  </div>
+</div>
                     <button 
                       className="picker-inline-add-btn" 
                       onClick={() => handleAdd(e)}
@@ -81,6 +96,7 @@ export default function ExercisePicker({ sessionId, userCode }) {
     </div>
   );
 }
+
 
 function getIcon(part) {
   const icons = { Chest: "💪", Back: "🧗", Legs: "🦵", Shoulders: "🏋️", Arms: "🥊", Abs: "🍫", Cardio: "🏃" };

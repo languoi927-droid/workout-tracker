@@ -14,15 +14,22 @@ export default function ActiveSession({ sessionId, userCode }) {
     return acc;
   }, {});
   // Calculate totals for the day
+// Calculate totals for the day safely
   const stats = exercises.reduce((acc, ex) => {
-    ex.sets.forEach(s => {
+    // Safety check: ensure ex.sets exists before looping
+    (ex.sets || []).forEach(s => {
       if (s.done) {
-        acc.weight += (s.weight * s.reps);
+        // Use Number() to prevent string concatenation (e.g., "60" + "60" = "6060")
+        const w = Number(s.weight) || 0;
+        const r = Number(s.reps) || 0;
+        acc.weight += (w * r);
         acc.sets += 1;
+        acc.editedCount += 1;
       }
     });
     return acc;
   }, { weight: 0, sets: 0 });
+
   const handleFinish = async () => {
     if (exercises.length === 0) return;
     if (window.confirm("Finish workout and save to history?")) {
