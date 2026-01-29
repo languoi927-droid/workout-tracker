@@ -34,7 +34,7 @@ export default function ExerciseLibrary({ userCode }) {
     load();
   };
 
-  const bodyParts = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Abs", "Cardio"];
+  const bodyParts = ["Chest", "Triceps", "Peach", "Back", "Biceps", "Deltoids"];
 
   // Filter items based on search
   const filteredItems = items.filter(item => 
@@ -127,6 +127,14 @@ export default function ExerciseLibrary({ userCode }) {
 }
 
 function getIcon(part) {
-  const icons = { Chest: "💪", Back: "🧗", Legs: "🦵", Shoulders: "🏋️", Arms: "🥊", Abs: "🍫", Cardio: "🏃" };
+  const icons = {
+    Chest: "💪",
+    Triceps: "🔱",
+    Peach: "🍑",
+    Back: "🧗",
+    Biceps: "🏋️",
+    Deltoids: "🦾",
+  };
+
   return icons[part] || "🔥";
 }

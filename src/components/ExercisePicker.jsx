@@ -16,8 +16,7 @@ export default function ExercisePicker({ sessionId, userCode }) {
     }
   }, [userCode]);
 
-  const bodyParts = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Abs", "Cardio"];
-
+  const bodyParts = ["Chest", "Triceps", "Peach", "Back", "Biceps", "Deltoids"];
   const handleAdd = async (exercise) => {
     // 🔹 ENHANCEMENT: Clean the data before sending to session
     // We want to make sure 'done' is false for all sets when starting fresh
@@ -99,6 +98,14 @@ export default function ExercisePicker({ sessionId, userCode }) {
 
 
 function getIcon(part) {
-  const icons = { Chest: "💪", Back: "🧗", Legs: "🦵", Shoulders: "🏋️", Arms: "🥊", Abs: "🍫", Cardio: "🏃" };
+  const icons = {
+    Chest: "💪",
+    Triceps: "🔱",
+    Peach: "🍑",
+    Back: "🧗",
+    Biceps: "🏋️",
+    Deltoids: "🦾",
+  };
+
   return icons[part] || "🔥";
 }

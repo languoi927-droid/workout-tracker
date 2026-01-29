@@ -65,8 +65,12 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
         <div className="field-group">
           <label>Category</label>
           <select value={form.bodyPart} onChange={handleBodyPartChange}>
-            <option>Chest</option><option>Back</option><option>Legs</option>
-            <option>Shoulders</option><option>Arms</option><option>Abs</option>
+            <option>Chest</option>
+<option>Triceps</option>
+<option>Peach</option>
+<option>Back</option>
+<option>Biceps</option>
+<option>Deltoids</option>
           </select>
         </div>
         <div className="field-group">
