@@ -1,5 +1,6 @@
-import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc, serverTimestamp, collection,getDocs} from "firebase/firestore";
 import { db } from "./firebase";
+import { updateExerciseTemplate } from "./exerciseService";
 
 export async function getOrCreateTodaySession(userCode) {
   // Standardize the code
@@ -28,13 +29,47 @@ export async function getOrCreateTodaySession(userCode) {
 }
 
 export async function finishSession(userCode, sessionId, totalStats) {
-  const sessionRef = doc(db, "users", userCode.toLowerCase().trim(), "workoutSessions", sessionId);
-  
-  return await updateDoc(sessionRef, {
+  const cleanCode = userCode.toLowerCase().trim();
+  const sessionRef = doc(db, "users", cleanCode, "workoutSessions", sessionId);
+
+  console.log("🚀 Finishing session:", sessionId);
+
+  await updateDoc(sessionRef, {
     completed: true,
-    completedAt: serverTimestamp(), // Use server time for accurate history
+    completedAt: serverTimestamp(),
     totalWeight: totalStats.weight,
     totalSets: totalStats.sets,
     status: "finished"
   });
+
+  const exercisesRef = collection(db, "users", cleanCode, "workoutSessions", sessionId, "exercises");
+  const exSnap = await getDocs(exercisesRef);
+  
+  console.log(`🔎 Found ${exSnap.docs.length} exercises in session`);
+
+  const updatePromises = exSnap.docs.map(async (exDoc) => {
+    const data = exDoc.data();
+    
+    // Log the check results
+    console.log(`Checking "${data.name}": templateId exists? ${!!data.templateId}, was edited? ${!!data.edited}`);
+
+    if (data.templateId && data.edited) {
+      console.log(`✅ Updating library for: ${data.name} (ID: ${data.templateId})`);
+      
+      const cleanedSets = data.sets.map(({ weight, reps }) => ({ 
+        weight: Number(weight), 
+        reps: Number(reps) 
+      }));
+      
+      return updateExerciseTemplate(cleanCode, data.templateId, {
+        sets: cleanedSets,
+        lastUsed: serverTimestamp()
+      });
+    } else {
+      console.warn(`⚠️ Skipping library update for "${data.name}" because it wasn't edited or has no templateId.`);
+    }
+  });
+
+  await Promise.all(updatePromises);
+  console.log("🏁 FinishSession complete!");
 }

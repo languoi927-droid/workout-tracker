@@ -25,14 +25,15 @@ export default function ExerciseInSession({ exercise, sessionId, userCode }) {
   };
 
   const toggleAllSets = () => {
-    const allCurrentlyDone = exercise.sets.every(s => s.done);
-    const updatedSets = exercise.sets.map(s => ({ ...s, done: !allCurrentlyDone }));
-    safeUpdate({
-      sets: updatedSets,
-      completed: !allCurrentlyDone,
-      edited: false
-    });
-  };
+  const allCurrentlyDone = exercise.sets.every(s => s.done);
+  const updatedSets = exercise.sets.map(s => ({ ...s, done: !allCurrentlyDone }));
+  safeUpdate({
+    sets: updatedSets,
+    completed: !allCurrentlyDone,
+    // CHANGE: Keep the edited status
+    edited: exercise.edited 
+  });
+};
 
   const toggleUnfinished = () => {
     safeUpdate({
@@ -41,17 +42,18 @@ export default function ExerciseInSession({ exercise, sessionId, userCode }) {
     });
   };
 
-  const toggleSet = (index) => {
-    const sets = exercise.sets.map((s, i) => 
-      i === index ? { ...s, done: !s.done } : s
-    );
-    const allDone = sets.every((s) => s.done);
-    safeUpdate({ 
-        sets, 
-        completed: allDone, 
-        edited: false 
-    });
-  };
+const toggleSet = (index) => {
+  const sets = exercise.sets.map((s, i) => 
+    i === index ? { ...s, done: !s.done } : s
+  );
+  const allDone = sets.every((s) => s.done);
+  safeUpdate({ 
+      sets, 
+      completed: allDone, 
+      // CHANGE: Keep the existing edited status instead of forcing false
+      edited: exercise.edited 
+  });
+};
 
  const handleUpdate = (index, field, delta) => {
   const sets = exercise.sets.map((s, i) => {

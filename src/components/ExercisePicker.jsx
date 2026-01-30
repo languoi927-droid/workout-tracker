@@ -17,21 +17,20 @@ export default function ExercisePicker({ sessionId, userCode }) {
   }, [userCode]);
 
   const bodyParts = ["Chest", "Triceps", "Peach", "Back", "Biceps", "Deltoids"];
-  const handleAdd = async (exercise) => {
-    // 🔹 ENHANCEMENT: Clean the data before sending to session
-    // We want to make sure 'done' is false for all sets when starting fresh
-    const sessionExerciseData = {
-      ...exercise,
-      sets: exercise.sets.map(s => ({ ...s, done: false })),
-      completed: false,
-      edited: false,
-      addedAt: new Date()
-    };
-
-    await addExerciseToSession(userCode, sessionId, sessionExerciseData);
-    setActiveCategory(null);
+  const handleAdd = async (exercise) => { // 1. Variable name is 'exercise'
+  const sessionExerciseData = {
+    ...exercise,
+    templateId: exercise.id,           // 2. Change 'exerciseFromLibrary.id' to 'exercise.id'
+    sets: exercise.sets.map(s => ({ ...s, done: false })),
+    completed: false,
+    edited: false,
+    addedAt: new Date()
   };
 
+  await addExerciseToSession(userCode, sessionId, sessionExerciseData);
+  setActiveCategory(null);
+};
+  
   return (
     <div className="picker-container">
       <h2 className="picker-title">Add Exercises</h2>

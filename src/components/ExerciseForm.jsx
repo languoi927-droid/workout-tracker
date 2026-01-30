@@ -30,7 +30,7 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
 
     if (count > updatedSets.length) {
       // Add more sets (copying values from the last set)
-      const lastSet = updatedSets[updatedSets.length - 1] || { reps: 10, weight: 0 };
+      const lastSet = updatedSets[updatedSets.length - 1] || { reps: 4, weight: 0 };
       const extra = Array.from({ length: count - updatedSets.length }, () => ({ ...lastSet, done: false }));
       updatedSets = [...updatedSets, ...extra];
     } else {
@@ -66,11 +66,11 @@ export default function ExerciseForm({ initial, onSave, onCancel }) {
           <label>Category</label>
           <select value={form.bodyPart} onChange={handleBodyPartChange}>
             <option>Chest</option>
-<option>Triceps</option>
-<option>Peach</option>
-<option>Back</option>
-<option>Biceps</option>
-<option>Deltoids</option>
+            <option>Triceps</option>
+            <option>Peach</option>
+            <option>Back</option>
+            <option>Biceps</option>
+            <option>Deltoids</option>
           </select>
         </div>
         <div className="field-group">
