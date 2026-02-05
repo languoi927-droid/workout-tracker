@@ -6,7 +6,15 @@ export default function ProgressTab({ userCode }) {
   const [startDate, setStartDate] = useState(new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedExercise, setSelectedExercise] = useState("All");
-
+  const formatVolume = (num) => {
+  if (num >= 1000000) {
+    return (num / 1000000).toFixed(2) + "M"; // 1,250,000 -> 1.25M
+  }
+  if (num >= 10000) {
+    return (num / 1000).toFixed(1) + "k";   // 15,400 -> 15.4k
+  }
+  return num.toLocaleString();              // 9,500 -> 9,500
+};
   useEffect(() => {
     loadHistory();
   }, [startDate, endDate, userCode]);
@@ -17,23 +25,38 @@ export default function ProgressTab({ userCode }) {
   };
 
   // 🔹 UseMemo to calculate totals without re-running on every render
-  const totals = useMemo(() => {
+const totals = useMemo(() => {
   const filtered = selectedExercise === "All" ? history : history.filter(h => h.name === selectedExercise);
   
   let totalKg = 0;
-  let topStrength = 0; // Highest Est. 1RM
+  let topStrength = 0;
+  let maxWeight = 0; // 1. Initialize maxWeight
   
   filtered.forEach(ex => {
     ex.sets.forEach(s => {
       if (s.done) {
-        totalKg += (s.weight * s.reps);
-        const est1RM = s.weight * (1 + s.reps / 30);
+        const w = Number(s.weight) || 0;
+        const r = Number(s.reps) || 0;
+
+        // Cumulative Volume
+        totalKg += (w * r);
+        
+        // 2. Track Absolute Max Weight
+        if (w > maxWeight) maxWeight = w;
+
+        // Estimated 1RM Calculation: $w \times (1 + \frac{r}{30})$
+        const est1RM = w * (1 + r / 30);
         if (est1RM > topStrength) topStrength = est1RM;
       }
     });
   });
 
-  return { totalKg, topStrength: Math.round(topStrength), count: filtered.length };
+  return { 
+    totalKg, 
+    topStrength: Math.round(topStrength), 
+    maxWeight, // 3. Return it
+    count: filtered.length 
+  };
 }, [history, selectedExercise]);
 
   const exerciseNames = ["All", ...new Set(history.map(h => h.name))];
@@ -59,7 +82,7 @@ export default function ProgressTab({ userCode }) {
         <div className="summary-grid">
           <div className="summary-card">
             <small>Total Volume</small>
-            <strong>{totals.totalKg.toLocaleString()} <small>kg</small></strong>
+            <strong>{formatVolume(totals.totalKg)} <small>kg</small></strong>
           </div>
           <div className="summary-card">
             <small>Personal Record</small>
